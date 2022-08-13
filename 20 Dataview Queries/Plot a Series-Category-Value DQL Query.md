@@ -20,7 +20,7 @@ description: Plot the results of a Series-Category-Value structured DQL query on
 ## Basic
 ### Projects started by month and year
 
-#### DQL Query Results
+#### DQL Query Equivalent
 ``` dataview
 TABLE WITHOUT ID
 	dateformat(rows[0].started, "yyyy") AS Year,
@@ -36,7 +36,7 @@ LIMIT 5
 
 
 #### DataviewJS
-``` //dataviewjs
+``` dataviewjs
 // -----
 // BASIC SETTINGS
 // -----
@@ -129,7 +129,7 @@ if (showTable) { dv.table(DQL.headers, DQL.values) }
 
 ## Variants
 ### 1. Project status by quarter
-#### DQL Query Results
+#### DQL Query Equivalent
 ``` dataview
 TABLE WITHOUT ID
       rows[0].status as "Status",
@@ -144,7 +144,7 @@ LIMIT 5
 ![[Bar Chart Series Category Value 2.png]]
 
 #### DataviewJS
-``` //dataviewjs
+``` dataviewjs
 // -----
 // BASIC SETTINGS
 // -----
