@@ -15,7 +15,7 @@ description: Plot the results of a Category-Series structured DQL query (with an
 > The first column should represent the *X-Category* labels for the chart, and each subsequent column should represent a different data *Series*. The column name is used as the *Series* name on the chart.
 ## Basic
 ### Wellbeing chart by day (from daily notes)
-#### DQL Query Results
+#### DQL Query Equivalent
 ``` dataview
 TABLE WITHOUT ID
 	file.name as "Date",
@@ -31,7 +31,7 @@ LIMIT 5
 ![[Line Chart Category Series.png]]
 
 #### DataviewJS
-``` //dataviewjs
+``` dataviewjs
 // -----
 // BASIC SETTINGS
 // -----
@@ -126,7 +126,7 @@ if (showTable) { dv.table(DQL.headers, DQL.values) }
 
 ## Variants
 ### Average Wellbeing chart by day-of-week (from daily notes)
-#### DQL Query Results
+#### DQL Query Equivalent
 ``` dataview
 TABLE
 	round(sum(MoodValues)/length(MoodValues), 1) AS Mood,
@@ -157,7 +157,7 @@ SORT date(rows[0].file.name).weekday
 ![[Bar Chart Category Series.png]]
 
 #### DataviewJS
-``` //dataviewjs
+``` dataviewjs
 // -----
 // BASIC SETTINGS
 // -----
