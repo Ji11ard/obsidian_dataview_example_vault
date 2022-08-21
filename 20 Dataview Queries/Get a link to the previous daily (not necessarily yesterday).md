@@ -1,5 +1,7 @@
 ---
 description: Fetches the file that has the highest day that is lower than the current files day in order to get the previous day
+topics:
+  - navigation
 date: 2022-07-07
 ---
 #dv/list #dv/from #dv/where #dv/sort #dv/limit 
@@ -17,6 +19,11 @@ LIMIT 1
 ```
 
 ## Variants
+
+### As javascript inline statement
+
+`$= dv.pages('"10 Example Data/dailys"').where(p => p.file.day && p.file.day < dv.current().file.day).sort(p => p.file.day, "desc").file.link.limit(1)`
+
 ### Show a custom prefix before the link
 
 ```dataview
@@ -38,3 +45,13 @@ SORT file.day ASC
 FLATTEN "Next day: " + file.link AS t
 LIMIT 1
 ```
+
+> [!help]- Similar Queries
+> Maybe these queries are of interest for you, too:
+> ```dataview
+> LIST
+> FROM "20 Dataview Queries"
+> FLATTEN topics as flattenedTopics
+> WHERE contains(this.topics, flattenedTopics)
+> AND file.name != this.file.name
+> ```

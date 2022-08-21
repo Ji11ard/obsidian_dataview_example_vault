@@ -1,5 +1,8 @@
 ---
-description: Plot the results of a Category-Series structured DQL query (with an artibrary number of Series columns) on a line or bar chart. 
+description: Plot the results of a Category-Series structured DQL query (with an artibrary number of Series columns) on a line or bar chart.
+topics:
+  - combining plugins
+  - charts
 ---
 #dv/table #dv/from #dv/where #dv/groupby #dv/sort #dv/sum #dvjs/tryQuery 
 
@@ -15,7 +18,7 @@ description: Plot the results of a Category-Series structured DQL query (with an
 > The first column should represent the *X-Category* labels for the chart, and each subsequent column should represent a different data *Series*. The column name is used as the *Series* name on the chart.
 ## Basic
 ### Wellbeing chart by day (from daily notes)
-#### DQL Query Equivalent
+#### DQL Query Results
 ``` dataview
 TABLE WITHOUT ID
 	file.name as "Date",
@@ -31,7 +34,7 @@ LIMIT 5
 ![[Line Chart Category Series.png]]
 
 #### DataviewJS
-``` dataviewjs
+``` //dataviewjs
 // -----
 // BASIC SETTINGS
 // -----
@@ -126,7 +129,7 @@ if (showTable) { dv.table(DQL.headers, DQL.values) }
 
 ## Variants
 ### Average Wellbeing chart by day-of-week (from daily notes)
-#### DQL Query Equivalent
+#### DQL Query Results
 ``` dataview
 TABLE
 	round(sum(MoodValues)/length(MoodValues), 1) AS Mood,
@@ -157,7 +160,7 @@ SORT date(rows[0].file.name).weekday
 ![[Bar Chart Category Series.png]]
 
 #### DataviewJS
-``` dataviewjs
+``` //dataviewjs
 // -----
 // BASIC SETTINGS
 // -----
@@ -250,3 +253,13 @@ dv.span("");
 if (showTable) { dv.table(DQL.headers, DQL.values) } 
 
 ```
+
+> [!help]- Similar Queries
+> Maybe these queries are of interest for you, too:
+> ```dataview
+> LIST
+> FROM "20 Dataview Queries"
+> FLATTEN topics as flattenedTopics
+> WHERE contains(this.topics, flattenedTopics)
+> AND file.name != this.file.name
+> ```
