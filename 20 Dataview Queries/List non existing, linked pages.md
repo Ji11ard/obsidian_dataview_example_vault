@@ -36,6 +36,8 @@ dv.list(resSet);
 
 ### List the files the unresolved link is contained in
 
+> [!info] See Basic -> DQL for a pure DQL version of this result
+
 ```dataviewjs
 const unresolvedLinksMap = app.metadataCache.unresolvedLinks
 
@@ -53,10 +55,22 @@ for (let page in unresolvedLinksMap) {
 dv.table(["Unresolved Link", "Contained in"], Object.values(res).map(l => [l.link, l.usages]));
 ```
 
-### List only unresolved link from a specific folder
+### List only unresolved links from a specific folder meeting specific criteria
 
-> [!warning] Limitation when filtering unresolved links
-> The second filter only works limited. When a file contains two unresolved links, i.e. "Fernando" and "Bob" and you're filtering after "Bob", you'll still end up with "Fernando" in the result, too - because they are both referenced from the same file and Bob's availability will keep the file and all its unresolved links in the filtered set.
+#### As DQL
+```dataview
+TABLE WITHOUT ID key AS "unresolved link", rows.file.link AS "referencing file"
+FROM "10 Example Data"
+FLATTEN file.outlinks as outlinks
+WHERE startswith(meta(outlinks).path, "B") AND length(meta(outlinks).path) > 3
+WHERE !(outlinks.file) AND !(contains(meta(outlinks).path, "/"))
+GROUP BY outlinks
+```
+
+
+#### As DataviewJS
+> [!warning] Limitation when filtering unresolved links in DataviewJS
+> The second filter only works limited. When a file contains two unresolved links, i.e. "Fernando" and "Bob" and you're filtering after "Bob", you'll still end up with "Fernando" in the result, too - because they are both referenced from the same file and Bob's availability will keep the file and **all** its unresolved links in the filtered set.
 > In order to fix that, it'd be necessary to filter out the unresolvedLinks array and map it back to the object that'll be processed.
 
 ```dataviewjs
@@ -88,6 +102,8 @@ dv.table(
 );
 ```
 
+---
+%% === end of query page === %%
 > [!help]- Similar Queries
 > Maybe these queries are of interest for you, too:
 > ```dataview
@@ -97,3 +113,23 @@ dv.table(
 > WHERE contains(this.topics, flattenedTopics)
 > AND file.name != this.file.name
 > ```
+
+```dataviewjs
+const inlinksFromUseCases = dv.current().file.inlinks.filter(link => link.path.contains("33 Use Cases"));
+
+const header = `> [!info] Part of Use Cases`;
+
+if (inlinksFromUseCases.length > 1) {
+	const list = inlinksFromUseCases.array().reduce((acc, curr) => `${acc}</br> - ${curr}`,"")
+
+	dv.span(`${header}
+    > This query is part of following use cases:
+    > ${list}
+    > 
+	`)
+} else if (inlinksFromUseCases.length === 1) {
+	dv.span(`${header}
+    > This query is part of use case ${inlinksFromUseCases[0]}.
+	`)
+}
+```

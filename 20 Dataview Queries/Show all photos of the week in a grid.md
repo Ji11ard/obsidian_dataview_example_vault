@@ -3,6 +3,7 @@ description: Show all images you have in your daily notes for this week in an im
 topics:
   - images
   - grid view
+  - weekly aggregation
 ---
 #dv/dataviewjs #dvjs/pages #dvjs/where #dvjs/container #dvjs/list #dvjs/view
 
@@ -56,11 +57,13 @@ Remove if you want to preserve the width configured on the image link itself. */
 
 ### Use as view snippet with a library for a nice layout
 
-> [!info] Sources of this query
-> You'll find the sources of this dv.view snippet under `00 Meta/dataview_views/imagegrid`. dv.views are a possibility to reuse complex javascript queries and to add css styling to them. Read more [here](https://blacksmithgu.github.io/obsidian-dataview/api/code-reference/#dvviewpath-input)
+![[What is ...#^dv-view]]
 
+> [!warning] Adjustment of script necessary
+> For demonstration purposes, the variable "yearAndWeek" is hardcoded to ["2022", "2"]. In order to use the script inside your vault, you need to adjust this line as explained inside the script.
 ```dataviewjs
-await dv.view('00 Meta/dataview_views/imagegrid')
+
+await dv.view('00 Meta/dataview_views/imagegrid', { current: dv.current(), dailyNotesSearchQuery: '"10 Example Data/dailys"', metadatafield: 'picoftheday'})
 ```
 
 ---
@@ -74,3 +77,23 @@ await dv.view('00 Meta/dataview_views/imagegrid')
 > WHERE contains(this.topics, flattenedTopics)
 > AND file.name != this.file.name
 > ```
+
+```dataviewjs
+const inlinksFromUseCases = dv.current().file.inlinks.filter(link => link.path.contains("33 Use Cases"));
+
+const header = `> [!info] Part of Use Cases`;
+
+if (inlinksFromUseCases.length > 1) {
+	const list = inlinksFromUseCases.array().reduce((acc, curr) => `${acc}</br> - ${curr}`,"")
+
+	dv.span(`${header}
+    > This query is part of following use cases:
+    > ${list}
+    > 
+	`)
+} else if (inlinksFromUseCases.length === 1) {
+	dv.span(`${header}
+    > This query is part of use case ${inlinksFromUseCases[0]}.
+	`)
+}
+```

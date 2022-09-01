@@ -12,6 +12,7 @@ topics:
 
 ```dataviewjs
 const projects = dv.pages('"10 Example Data/projects"')
+	.where(p => p["working hours"])
 	.mutate(p => p.workHourSum = sumUpWorkHours(p["working hours"]))
 
 
@@ -36,6 +37,7 @@ function sumUpWorkHours(workingHours) {
 
 ```dataviewjs
 const projects = dv.pages('"10 Example Data/projects"')
+	.where(p => p["working hours"])
 	.mutate(p => p.workHourSum = sumUpWorkHours(p["working hours"]))
 	.sort(p => p.status, "desc")
 
@@ -53,6 +55,8 @@ function sumUpWorkHours(workingHours) {
 }
 ```
 
+---
+%% === end of query page === %%
 > [!help]- Similar Queries
 > Maybe these queries are of interest for you, too:
 > ```dataview
@@ -62,3 +66,23 @@ function sumUpWorkHours(workingHours) {
 > WHERE contains(this.topics, flattenedTopics)
 > AND file.name != this.file.name
 > ```
+
+```dataviewjs
+const inlinksFromUseCases = dv.current().file.inlinks.filter(link => link.path.contains("33 Use Cases"));
+
+const header = `> [!info] Part of Use Cases`;
+
+if (inlinksFromUseCases.length > 1) {
+	const list = inlinksFromUseCases.array().reduce((acc, curr) => `${acc}</br> - ${curr}`,"")
+
+	dv.span(`${header}
+    > This query is part of following use cases:
+    > ${list}
+    > 
+	`)
+} else if (inlinksFromUseCases.length === 1) {
+	dv.span(`${header}
+    > This query is part of use case ${inlinksFromUseCases[0]}.
+	`)
+}
+```

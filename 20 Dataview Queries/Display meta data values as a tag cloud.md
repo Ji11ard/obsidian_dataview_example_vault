@@ -10,8 +10,9 @@ topics:
 
 ## Basic 
 
-> [!example] Sources of this query
-> This query uses the [dv.view mechanism of dataview](https://blacksmithgu.github.io/obsidian-dataview/api/code-reference/#dvviewpath-input). This allows you to outsource dataview javascript code to a file in order to make it reusable. Additionally to that, it allows you to write css specific to this query. 
+![[What is ...#^dv-view]]
+
+> [!example] Sources
 > You'll find the sources of this dv.view snippet under `00 Meta/dataview_views/tagcloud`. It expects the values you want to display as an array in the second argument.
 
 ```dataviewjs
@@ -24,6 +25,8 @@ await dv.view("00 Meta/dataview_views/tagcloud",
 > [!info] Usage in the dataview example vault
 > This query is used to render the [[Topic Overview]]!
 
+---
+%% === end of query page === %%
 > [!help]- Similar Queries
 > Maybe these queries are of interest for you, too:
 > ```dataview
@@ -33,3 +36,23 @@ await dv.view("00 Meta/dataview_views/tagcloud",
 > WHERE contains(this.topics, flattenedTopics)
 > AND file.name != this.file.name
 > ```
+
+```dataviewjs
+const inlinksFromUseCases = dv.current().file.inlinks.filter(link => link.path.contains("33 Use Cases"));
+
+const header = `> [!info] Part of Use Cases`;
+
+if (inlinksFromUseCases.length > 1) {
+	const list = inlinksFromUseCases.array().reduce((acc, curr) => `${acc}</br> - ${curr}`,"")
+
+	dv.span(`${header}
+    > This query is part of following use cases:
+    > ${list}
+    > 
+	`)
+} else if (inlinksFromUseCases.length === 1) {
+	dv.span(`${header}
+    > This query is part of use case ${inlinksFromUseCases[0]}.
+	`)
+}
+```
